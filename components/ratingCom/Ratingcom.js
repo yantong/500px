@@ -15,6 +15,8 @@ Component({
     lastSize:[],
     selTypes: ['discover/rating','community/discover/rankingRise','community/discover/created_date',
     'community/discover/recommendTime','community/search/set','community/discover/created_date'],
+    selImgStyle: '',
+    showSelImgView: false
   },
   methods: {
     resizePic(res) {      
@@ -144,6 +146,12 @@ Component({
 
       this.setData({
         page: this.data.page + 1
+      })
+    },
+    selImg(event) {      
+      this.setData({
+        showSelImgView: true,
+        selImgStyle: `width: 100%;height: 100%;background: url("${this.data.imags[event.target.dataset.index]}") no-repeat;background-size: auto 100%`
       })
     }
   },

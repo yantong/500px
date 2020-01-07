@@ -1,3 +1,11 @@
 <scroll-view class="scrollView" scroll-y="true"  bindscrolltolower="bottomUpdate">
-  <image class="showImg" style="{{imgStyles[index]}}" mode="aspectFill" src="{{imags[index]}}" wx:for="{{imgStyles}}" wx:key="index"></image>
+ <view class="selImageView" wx:if="{{showSelImgView}}">
+    <movable-area style="height: 240px; width: 100%;" scale-area >
+      <movable-view style="{{selImgStyle}}" direction="all" scale scale-min="0.5" scale-max="4" scale-value="1">
+      </movable-view>
+    </movable-area>
+  </view>
+  <view>
+    <image class="showImg" style="{{imgStyles[index]}}" mode="aspectFill" src="{{imags[index]}}" wx:for="{{imgStyles}}" wx:key="index" data-index="{{index}}" bindtap="selImg" ></image>
+  </view>
 </scroll-view>
