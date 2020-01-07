@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "Ratingcom": "../../components/ratingCom/Ratingcom",
+    "PicAndTextCom": "../../components/PicAndTextCom/PicAndTextCom"
+  }
+}

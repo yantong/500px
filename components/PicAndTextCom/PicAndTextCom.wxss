@@ -1,0 +1,78 @@
+.scrollView {
+  height: 100%;
+  width: 100%;  
+  background: #f7f8fa;
+}
+
+.albumView, .picAndtext {
+  box-sizing: border-box;
+  text-align: center;
+  background: white;
+  overflow: hidden;
+  border-radius: 5px;
+  margin: 0 10px;
+  margin-bottom: 20px;
+}
+
+.albumView image, .picAndtext image{
+  width: 100%;
+}
+
+.albumView text, .picAndtext text{
+  display: block;
+  margin-bottom: 5px;
+}
+
+.picAndtext label.tag {
+  display: inline-block;
+  width: 68px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 100px;
+  background-color: #eaebed;
+  font-size: 12px;
+  color: #525558;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.albumView .avatar, .picAndtext .avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  margin-bottom: 7px;
+}
+
+.bottomView {
+  overflow: hidden;
+}
+
+.leftView {
+  float: left;
+  margin-left: 5px;
+}
+
+.leftView image, .leftView label {
+  display: inline-block;
+  vertical-align: top;
+  line-height: 30px;
+}
+
+.leftView label {
+  margin-left: 5px;
+}
+
+.rightCount {
+  float: right;
+  line-height: 30px;
+  margin-right: 5px;
+}
+
+
+.rightCount, .leftView label {
+  color: #b8c1c8;
+  font-size: 12px;
+}

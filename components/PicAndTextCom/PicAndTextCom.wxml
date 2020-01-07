@@ -1,0 +1,31 @@
+<scroll-view class="scrollView" scroll-y="true"  bindscrolltolower="bottomUpdate">
+  <view wx:if="{{type == 0}}">
+    <view class="albumView"  wx:for="{{showData}}" wx:key="index">
+      <image mode="aspectFill" src="{{item.url.baseUrl + '!p2'}}"></image>
+      <view>
+        <text>{{item.title}}</text>
+        <text>{{item.uploaderName}}</text>
+        <image class="avatar" mode="aspectFit" src="{{item.uploaderInfo.avatar.a1}}"></image>
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{type == 1}}">
+    <view class="picAndtext"  wx:for="{{showData}}" wx:key="index">
+      <image mode="aspectFill" src="{{item.url.baseUrl + '!p2'}}"></image>
+      <view>
+        <text>{{item.title}}</text>
+        <view>
+          <label class="tag">{{item.tag.length && item.tag[0]}}</label>
+        </view>
+        <view class="bottomView">
+          <view class="leftView">
+            <image class="avatar" mode="aspectFit" src="{{item.uploaderInfo.avatar.a1}}"></image>
+            <label>{{item.uploaderInfo.nickName}}</label>
+          </view>
+          <label class="rightCount">{{item.picturePvCount + '阅读'}}</label>
+        </view>
+        
+      </view>
+    </view>
+  </view>
+</scroll-view>

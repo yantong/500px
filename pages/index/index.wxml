@@ -1,0 +1,13 @@
+<view class="mainView">
+  <view class="titles">
+    <view data-index="{{index}}" bindtap="selTitle" class="{{index == seled ? 'seled' : ''}}" wx:for="{{titles}}" wx:key="index">{{item}}</view>
+  </view>
+  <view class="contentContanier">
+    <Ratingcom type="0" wx:if="{{seled == 0}}"/>
+    <Ratingcom type="1" wx:if="{{seled == 1}}"/>
+    <Ratingcom type="2" wx:if="{{seled == 2}}"/>
+    <Ratingcom type="3" wx:if="{{seled == 3}}"/>
+    <PicAndTextCom type="0" wx:if="{{seled == 4}}"/>
+    <PicAndTextCom type="1" wx:if="{{seled == 5}}"/>
+  </view>
+</view>

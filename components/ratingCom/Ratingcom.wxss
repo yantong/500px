@@ -1,0 +1,8 @@
+.scrollView {
+  height: 100%;
+}
+
+.showImg {
+  padding: 0 2.5px;
+  box-sizing: border-box;
+}

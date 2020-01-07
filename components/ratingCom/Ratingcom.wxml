@@ -1,0 +1,3 @@
+<scroll-view class="scrollView" scroll-y="true"  bindscrolltolower="bottomUpdate">
+  <image class="showImg" style="{{imgStyles[index]}}" mode="aspectFill" src="{{imags[index]}}" wx:for="{{imgStyles}}" wx:key="index"></image>
+</scroll-view>

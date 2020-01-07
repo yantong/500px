@@ -1,0 +1,28 @@
+.mainView {
+  height: 100%;
+}
+
+.titles {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  height: 29px;
+  width: 100%;
+  z-index: 9;
+  background-color: white;
+}
+
+.titles > view {
+  margin: 0 5px;
+  padding-bottom: 5px;
+}
+
+.titles .seled {
+  color: #0099e5;
+  border-bottom: #0099e5 3px solid;
+}
+
+.contentContanier {
+  height: 100%;
+  padding-top: 34px;
+}
