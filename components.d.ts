@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    ImgGrid: typeof import('./src/components/imgGrid.vue')['default']
     Nav: typeof import('./src/components/nav.vue')['default']
     Tabs: typeof import('./src/components/tabs.vue')['default']
   }

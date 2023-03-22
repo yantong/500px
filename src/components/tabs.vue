@@ -2,17 +2,20 @@
   <view
     class="tabs"
     :class="{
-      flex: props.flex,
+      flex: flex,
     }"
   >
     <view
-      v-for="(item, index) in props.options"
+      v-for="(item, index) in options"
       :key="index"
       class="options"
       :class="{
         seled: selIndex == index,
       }"
-      @click="selIndex = index"
+      @click="
+        selIndex = index;
+        emit('change', item);
+      "
     >
       <text>{{ item }}</text>
     </view>
@@ -23,6 +26,7 @@
 import { ref } from "vue";
 
 const props = defineProps(["options", "flex"]);
+const emit = defineEmits(["change"]);
 
 let selIndex = ref(0);
 </script>
@@ -43,10 +47,13 @@ let selIndex = ref(0);
 
     border-bottom: 6px solid transparent;
 
-    font-size: 36px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #71767a;
 
     &.seled {
       border-color: #409eff;
+      color: #409eff;
     }
   }
 
