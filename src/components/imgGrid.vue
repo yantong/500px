@@ -1,7 +1,7 @@
 <template>
   <view class="img-grid" :style="{ height: contanierHeight + 'px' }">
     <Image
-      v-for="(item, index) in displayImg"
+      v-for="item in displayImg"
       lazyLoad
       mode="aspectFill"
       :key="item.url.p1"
@@ -24,100 +24,98 @@
 import { watch, ref } from "vue";
 import Taro from "@tarojs/taro";
 
+const windowWidth = Taro.getWindowInfo().windowWidth;
+const defHeight = 100;
+
 let props = defineProps(["imgs"]);
+
 let displayImg = ref([]);
 let gutter = ref(10);
 let contanierHeight = ref(0);
-
-function calcImgs(imgs) {
-  const windowWidth = Taro.getWindowInfo().windowWidth;
-
-  let defHeight = 100;
-  let saveImgs = [];
-  let sumHeight = 0;
-
-  for (let index = 0; index < imgs.length; index++) {
-    let imgCur = imgs[index];
-    let { width, height } = imgCur;
-
-    if (height == 0) {
-      imgCur.widthDispaly = 0;
-      imgCur.heightDisplay = 0;
-      imgCur.left = 0;
-      imgCur.top = 0;
-
-      continue;
-    }
-
-    imgCur.rate = width / height;
-
-    if (saveImgs.length) {
-      let sumImgs = [...saveImgs, imgCur];
-      let sumWidth = sumImgs.reduce((total, item) => {
-        return item.rate * defHeight + total;
-      }, 0);
-      let usedWidth = windowWidth - (sumImgs.length + 1) * gutter.value;
-
-      if (sumWidth >= usedWidth) {
-        let sumWidthSaveImgs = saveImgs.reduce((total, item) => {
-          return item.rate * defHeight + total;
-        }, 0);
-        let usedWidthSaveImgs =
-          windowWidth - (saveImgs.length + 1) * gutter.value;
-
-        saveImgs.forEach((item, index) => {
-          item.widthDispaly =
-            usedWidthSaveImgs * ((item.rate * defHeight) / sumWidthSaveImgs);
-          item.heightDisplay = item.widthDispaly / item.rate;
-
-          item.left =
-            index == 0
-              ? gutter.value
-              : saveImgs[index - 1].left +
-                saveImgs[index - 1].widthDispaly +
-                gutter.value;
-          item.top = sumHeight;
-        });
-
-        sumHeight += gutter.value + saveImgs[0].heightDisplay;
-
-        saveImgs = [];
-      }
-    }
-
-    saveImgs.push(imgCur);
-
-    if (index === imgs.length - 1) {
-      saveImgs.forEach((item, index) => {
-        item.widthDispaly = item.rate * defHeight;
-        item.heightDisplay = defHeight;
-
-        item.left =
-          index == 0
-            ? gutter.value
-            : saveImgs[index - 1].left +
-              saveImgs[index - 1].widthDispaly +
-              gutter.value;
-        item.top = sumHeight;
-      });
-
-      contanierHeight.value = sumHeight + defHeight;
-    }
-  }
-}
 
 watch(
   () => {
     return props.imgs;
   },
   (imgs) => {
-    let imgsCopy = [...props.imgs];
-
-    calcImgs(imgsCopy);
-
-    displayImg.value = [...imgsCopy];
+    displayImg.value = calcImgs(imgs);
   }
 );
+
+function calcImgs(imgs) {
+  let calculatingImgs = imgs.map((img) => {
+    return setImgDefault(img);
+  });
+  let saveImgs = [];
+  let sumHeight = 0;
+
+  calculatingImgs.forEach((img) => {
+    saveImgs.push(img);
+
+    let { sumWidth, usedWidth } = getSumWidthAndUsedWidth(saveImgs);
+
+    if (sumWidth > usedWidth) {
+      let bottom = setImgsPos(
+        saveImgs.splice(0, saveImgs.length - 1),
+        sumHeight
+      );
+
+      sumHeight = bottom + gutter.value;
+    }
+  });
+
+  contanierHeight.value = setImgsPos(saveImgs, sumHeight, true);
+
+  return calculatingImgs;
+}
+
+function setImgDefault(img) {
+  let { width, height } = img;
+
+  img.WHRate = height ? width / height : 0;
+  img.widthDispaly = 0;
+  img.heightDisplay = 0;
+  img.left = 0;
+  img.top = 0;
+
+  return img;
+}
+
+function getSumWidthAndUsedWidth(imgs) {
+  let sumWidth = imgs.reduce((total, item) => {
+    return item.WHRate * defHeight + total;
+  }, 0);
+  let usedWidth = windowWidth - (imgs.length + 1) * gutter.value;
+
+  return {
+    sumWidth,
+    usedWidth,
+  };
+}
+
+function setImgsPos(imgs, topPos, isDefault) {
+  imgs.forEach((item, index) => {
+    if (isDefault) {
+      item.widthDispaly = item.WHRate * defHeight;
+      item.heightDisplay = defHeight;
+    } else {
+      let { sumWidth: sumWidthSaveImgs, usedWidth: usedWidthSaveImgs } =
+        getSumWidthAndUsedWidth(imgs);
+
+      item.widthDispaly =
+        usedWidthSaveImgs * ((item.WHRate * defHeight) / sumWidthSaveImgs);
+      item.heightDisplay = item.widthDispaly / item.WHRate;
+    }
+
+    item.left =
+      index == 0
+        ? gutter.value
+        : imgs[index - 1].left + imgs[index - 1].widthDispaly + gutter.value;
+    item.top = topPos;
+  });
+
+  return imgs[0].top + imgs[0].heightDisplay;
+}
 </script>
 
 <style lang="scss">
