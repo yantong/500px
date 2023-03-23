@@ -48,9 +48,11 @@ watch(
 );
 
 function calcImgs(imgs) {
-  let calculatingImgs = imgs.map((img) => {
-    return setImgDefault(img);
-  });
+  let calculatingImgs = imgs
+    .map((img) => {
+      return setImgDefault(img);
+    })
+    .filter((img) => img.WHRate);
   let saveImgs = [];
   let sumHeight = 0;
 

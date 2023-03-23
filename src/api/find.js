@@ -30,8 +30,6 @@ export default {
     });
   },
   getXinzuo(page, pageSize) {
-    console.log("getXinzuo -- ");
-
     return new Promise((resolve, reject) => {
       Taro.request({
         url: `${baseUrlDiscover}/created_date?resourceType=0,2&startTime=&page=${page}&size=${pageSize}&type=json`,
