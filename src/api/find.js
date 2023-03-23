@@ -1,12 +1,12 @@
 import Taro from "@tarojs/taro";
 
-let baseUrl = "https://500px.com.cn/community/discover";
+let baseUrlDiscover = "https://500px.com.cn/community/discover";
 
 export default {
   getRemen(page, pageSize) {
     return new Promise((resolve, reject) => {
       Taro.request({
-        url: `${baseUrl}/rating?resourceType=0,2&category=&orderBy=rating&startTime=&page=${page}&size=${pageSize}&type=json`,
+        url: `${baseUrlDiscover}/rating?resourceType=0,2&category=&orderBy=rating&startTime=&page=${page}&size=${pageSize}&type=json`,
         success(res) {
           resolve(res);
         },
@@ -19,7 +19,7 @@ export default {
   getPaiming(page, pageSize) {
     return new Promise((resolve, reject) => {
       Taro.request({
-        url: `${baseUrl}/rankingRise?resourceType=0,2&startTime=&page=${page}&size=${pageSize}&type=json`,
+        url: `${baseUrlDiscover}/rankingRise?resourceType=0,2&startTime=&page=${page}&size=${pageSize}&type=json`,
         success(res) {
           resolve(res);
         },
@@ -30,9 +30,11 @@ export default {
     });
   },
   getXinzuo(page, pageSize) {
+    console.log("getXinzuo -- ");
+
     return new Promise((resolve, reject) => {
       Taro.request({
-        url: `${baseUrl}/created_date?resourceType=0,2&startTime=&page=${page}&size=${pageSize}&type=json`,
+        url: `${baseUrlDiscover}/created_date?resourceType=0,2&startTime=&page=${page}&size=${pageSize}&type=json`,
         success(res) {
           resolve(res);
         },
@@ -45,7 +47,34 @@ export default {
   getTuijian(page, pageSize) {
     return new Promise((resolve, reject) => {
       Taro.request({
-        url: `${baseUrl}/recommendTime?resourceType=0,2,4&startTime=&page=${page}&size=${pageSize}&type=json`,
+        url: `${baseUrlDiscover}/recommendTime?resourceType=0,2,4&startTime=&page=${page}&size=${pageSize}&type=json`,
+        success(res) {
+          resolve(res);
+        },
+        fail(err) {
+          reject(err);
+        },
+      });
+    });
+  },
+  getYingji(page, pageSize) {
+    console.log("getYingji -- ");
+    return new Promise((resolve, reject) => {
+      Taro.request({
+        url: `https://500px.com.cn/community/search/set?hasCover=1&orderby=rating&page=${page}&size=${pageSize}&type=json`,
+        success(res) {
+          resolve(res);
+        },
+        fail(err) {
+          reject(err);
+        },
+      });
+    });
+  },
+  getZhuanlan(page, pageSize) {
+    return new Promise((resolve, reject) => {
+      Taro.request({
+        url: `${baseUrlDiscover}/created_date?resourceType=3&page=${page}&size=${pageSize}&type=json`,
         success(res) {
           resolve(res);
         },

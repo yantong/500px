@@ -6,38 +6,80 @@
       </template>
     </nav-bar>
     <tabs :options="tabOptions" :flex="true" @change="selTab"></tabs>
-    <scroll-view :scroll-y="true" class="imgs" @scrolltolower="nextPage">
-      <img-grid :imgs="imgs" :key="curTab"></img-grid>
-      <view v-show="!loadEnd" class="loading"><text>正在加载...</text></view>
+    <scroll-view
+      :scroll-y="true"
+      class="imgs"
+      @scroll="scroll"
+      :scrollTop="scrollTop"
+    >
+      <img-grid :imgs="imgs" v-show="showImgGrid"></img-grid>
+      <photograph-album
+        v-show="curTab == '影集'"
+        :datas="photographAlbums"
+      ></photograph-album>
+      <view v-show="!loadEnd" class="loading">
+        <Image
+          class="loading-icon"
+          v-show="loading"
+          :src="require('../../assets/img/loading.png')"
+        />
+      </view>
     </scroll-view>
   </view>
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
+import Taro from "@tarojs/taro";
+import { ref, watchEffect, nextTick, computed } from "vue";
 import NavBar from "../../components/nav.vue";
 import tabs from "../../components/tabs.vue";
 import imgGrid from "../../components/imgGrid.vue";
+import photographAlbum from "../../components/photographAlbum.vue";
 import api from "../../api/find";
+import * as util from "../../util/index";
 
 let tabOptions = ["热门", "排名上升", "新作", "编辑推荐", "影集", "专栏"];
 let pageSize = 20;
 
 let imgs = ref([]);
+let photographAlbums = ref([]);
 let loading = ref(false);
 let loadEnd = ref(false);
 let pageIndex = ref(1);
 let curTab = ref("热门");
+let scrollTop = ref(0);
 
 function selTab(tab) {
+  if (curTab.value == tab) return;
+
   curTab.value = tab;
 
   pageIndex.value = 1;
-  imgs.value = [];
-
   loading.value = true;
   loadEnd.value = false;
+  scrollTop.value = 0;
+
+  if (showImgGrid.value) {
+    imgs.value = [];
+  } else if (curTab.value == "影集") {
+    photographAlbums.value = [];
+  }
 }
+
+let scroll = util.debounce((scrollData) => {
+  let scrollView = Taro.createSelectorQuery().select(".imgs");
+
+  scrollView
+    .boundingClientRect((rect) => {
+      let { scrollHeight, scrollTop } = scrollData.detail;
+      let distance = scrollHeight / 3;
+
+      if (scrollTop + rect.height + distance >= scrollHeight) {
+        nextPage();
+      }
+    })
+    .exec();
+}, 200);
 
 function nextPage() {
   if (loading.value || loadEnd.value) return;
@@ -52,16 +94,24 @@ watchEffect(async () => {
     排名上升: api.getPaiming,
     新作: api.getXinzuo,
     编辑推荐: api.getTuijian,
-    影集: api.getRemen,
-    专栏: api.getRemen,
+    影集: api.getYingji,
+    专栏: api.getZhuanlan,
   };
 
   let res = await reqMap[curTab.value](pageIndex.value, pageSize);
 
-  imgs.value = [...imgs.value, ...res.data];
+  if (showImgGrid.value) {
+    imgs.value = [...imgs.value, ...res.data];
+  } else if (curTab.value == "影集") {
+    photographAlbums.value = res.data.data;
+  }
 
   loading.value = false;
   loadEnd.value = !res.data.length;
+});
+
+const showImgGrid = computed(() => {
+  return ["热门", "排名上升", "新作", "编辑推荐"].includes(curTab.value);
 });
 </script>
 
@@ -80,15 +130,29 @@ watchEffect(async () => {
 
     margin-top: 10px;
 
+    @keyframes loading {
+      0% {
+        transform: rotate(0);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
     .loading {
       display: flex;
       align-items: center;
       justify-content: center;
 
-      // background: #edeef1;
+      height: 96px;
 
-      height: 80px;
-      font-size: 32px;
+      .loading-icon {
+        width: 64px;
+        height: 64px;
+
+        animation: loading 0.75s linear infinite;
+      }
     }
   }
 }

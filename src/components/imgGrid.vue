@@ -38,7 +38,12 @@ watch(
     return props.imgs;
   },
   (imgs) => {
-    displayImg.value = calcImgs(imgs);
+    if (imgs.length) {
+      displayImg.value = calcImgs(imgs);
+    } else {
+      displayImg.value = [];
+      contanierHeight.value = 0;
+    }
   }
 );
 
