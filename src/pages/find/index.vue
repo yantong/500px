@@ -17,6 +17,10 @@
         v-show="curTab == '影集'"
         :datas="photographAlbums"
       ></photograph-album>
+      <special-column
+        v-show="curTab == '专栏'"
+        :datas="specialColumns"
+      ></special-column>
       <view v-show="!loadEnd" class="loading">
         <Image
           class="loading-icon"
@@ -35,6 +39,7 @@ import NavBar from "../../components/nav.vue";
 import tabs from "../../components/tabs.vue";
 import imgGrid from "../../components/imgGrid.vue";
 import photographAlbum from "../../components/photographAlbum.vue";
+import specialColumn from "../../components/specialColumn.vue";
 import api from "../../api/find";
 import * as util from "../../util/index";
 
@@ -43,6 +48,7 @@ let pageSize = 20;
 
 let imgs = ref([]);
 let photographAlbums = ref([]);
+let specialColumns = ref([]);
 let loading = ref(false);
 let loadEnd = ref(false);
 let pageIndex = ref(1);
@@ -59,11 +65,9 @@ function selTab(tab) {
   loadEnd.value = false;
   scrollTop.value = 0;
 
-  if (showImgGrid.value) {
-    imgs.value = [];
-  } else if (curTab.value == "影集") {
-    photographAlbums.value = [];
-  }
+  imgs.value = [];
+  photographAlbums.value = [];
+  specialColumns.value = [];
 }
 
 let scroll = util.debounce((scrollData) => {
@@ -104,6 +108,8 @@ watchEffect(async () => {
     imgs.value = [...imgs.value, ...res.data];
   } else if (curTab.value == "影集") {
     photographAlbums.value = [...photographAlbums.value, ...res.data.data];
+  } else if (curTab.value == "专栏") {
+    specialColumns.value = [...specialColumns.value, ...res.data];
   }
 
   loading.value = false;
@@ -112,6 +118,8 @@ watchEffect(async () => {
     loadEnd.value = !res.data.length;
   } else if (curTab.value == "影集") {
     loadEnd.value = !res.data.data.length;
+  } else if (curTab.value == "专栏") {
+    loadEnd.value = !res.data.length;
   }
 });
 

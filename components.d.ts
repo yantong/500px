@@ -10,6 +10,7 @@ declare module '@vue/runtime-core' {
     ImgGrid: typeof import('./src/components/imgGrid.vue')['default']
     Nav: typeof import('./src/components/nav.vue')['default']
     PhotographAlbum: typeof import('./src/components/photographAlbum.vue')['default']
+    SpecialColumn: typeof import('./src/components/specialColumn.vue')['default']
     Tabs: typeof import('./src/components/tabs.vue')['default']
   }
 }
