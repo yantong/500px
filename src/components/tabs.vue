@@ -43,11 +43,11 @@ let selIndex = ref(0);
   .options {
     flex-shrink: 0;
 
-    padding: 16px 0;
+    padding: 8px 0;
 
-    border-bottom: 6px solid transparent;
+    border-bottom: 3px solid transparent;
 
-    font-size: 28px;
+    font-size: 16px;
     font-weight: 700;
     color: #71767a;
 
@@ -59,7 +59,7 @@ let selIndex = ref(0);
 
   &:not(.flex) {
     .options {
-      margin: 0 16px;
+      margin: 0 8px;
     }
   }
 }

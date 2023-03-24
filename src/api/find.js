@@ -56,7 +56,6 @@ export default {
     });
   },
   getYingji(page, pageSize) {
-    console.log("getYingji -- ");
     return new Promise((resolve, reject) => {
       Taro.request({
         url: `https://500px.com.cn/community/search/set?hasCover=1&orderby=rating&page=${page}&size=${pageSize}&type=json`,

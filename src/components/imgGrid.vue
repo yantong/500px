@@ -30,7 +30,7 @@ const defHeight = 100;
 let props = defineProps(["imgs"]);
 
 let displayImg = ref([]);
-let gutter = ref(10);
+let gutter = ref(7.5);
 let contanierHeight = ref(0);
 
 watch(
@@ -128,7 +128,5 @@ function setImgsPos(imgs, topPos, isDefault) {
 <style lang="scss">
 .img-grid {
   position: relative;
-
-  padding: 0 10px;
 }
 </style>

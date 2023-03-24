@@ -54,7 +54,7 @@ const navHeight = height + navPaddingBottom;
     align-items: center;
     justify-content: center;
 
-    font-size: 40px;
+    font-size: 20px;
   }
 }
 </style>

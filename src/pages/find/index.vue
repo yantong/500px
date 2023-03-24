@@ -103,11 +103,16 @@ watchEffect(async () => {
   if (showImgGrid.value) {
     imgs.value = [...imgs.value, ...res.data];
   } else if (curTab.value == "影集") {
-    photographAlbums.value = res.data.data;
+    photographAlbums.value = [...photographAlbums.value, ...res.data.data];
   }
 
   loading.value = false;
-  loadEnd.value = !res.data.length;
+
+  if (showImgGrid.value) {
+    loadEnd.value = !res.data.length;
+  } else if (curTab.value == "影集") {
+    loadEnd.value = !res.data.data.length;
+  }
 });
 
 const showImgGrid = computed(() => {
@@ -128,7 +133,7 @@ const showImgGrid = computed(() => {
     height: 0;
     flex: 1;
 
-    margin-top: 10px;
+    margin-top: 8px;
 
     @keyframes loading {
       0% {
@@ -145,11 +150,11 @@ const showImgGrid = computed(() => {
       align-items: center;
       justify-content: center;
 
-      height: 96px;
+      height: 48px;
 
       .loading-icon {
-        width: 64px;
-        height: 64px;
+        width: 32px;
+        height: 32px;
 
         animation: loading 0.75s linear infinite;
       }
