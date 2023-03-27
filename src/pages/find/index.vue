@@ -14,11 +14,11 @@
     >
       <img-grid :imgs="imgs" v-show="showImgGrid"></img-grid>
       <photograph-album
-        v-show="curTab == '影集'"
+        v-show="curTab == YING_JI"
         :datas="photographAlbums"
       ></photograph-album>
       <special-column
-        v-show="curTab == '专栏'"
+        v-show="curTab == ZHUAN_LAN"
         :datas="specialColumns"
       ></special-column>
       <view v-show="!loadEnd" class="loading">
@@ -43,16 +43,33 @@ import specialColumn from "../../components/specialColumn.vue";
 import api from "../../api/find";
 import * as util from "../../util/index";
 
-let tabOptions = ["热门", "排名上升", "新作", "编辑推荐", "影集", "专栏"];
-let pageSize = 20;
+const RE_MEN = "热门";
+const PAI_MIN_SHANG_SHENG = "排名上升";
+const XIN_ZUO = "新作";
+const BIAN_JI_TUI_JIAN = "编辑推荐";
+const YING_JI = "影集";
+const ZHUAN_LAN = "专栏";
+
+let tabOptions = [
+  RE_MEN,
+  PAI_MIN_SHANG_SHENG,
+  XIN_ZUO,
+  BIAN_JI_TUI_JIAN,
+  YING_JI,
+  ZHUAN_LAN,
+];
+let curTab = ref(RE_MEN);
 
 let imgs = ref([]);
 let photographAlbums = ref([]);
 let specialColumns = ref([]);
+
+let pageIndex = ref(1);
+let pageSize = 20;
+
 let loading = ref(false);
 let loadEnd = ref(false);
-let pageIndex = ref(1);
-let curTab = ref("热门");
+
 let scrollTop = ref(0);
 
 function selTab(tab) {
@@ -94,37 +111,33 @@ function nextPage() {
 
 watchEffect(async () => {
   let reqMap = {
-    热门: api.getRemen,
-    排名上升: api.getPaiming,
-    新作: api.getXinzuo,
-    编辑推荐: api.getTuijian,
-    影集: api.getYingji,
-    专栏: api.getZhuanlan,
+    [RE_MEN]: api.getRemen,
+    [PAI_MIN_SHANG_SHENG]: api.getPaiming,
+    [XIN_ZUO]: api.getXinzuo,
+    [BIAN_JI_TUI_JIAN]: api.getTuijian,
+    [YING_JI]: api.getYingji,
+    [ZHUAN_LAN]: api.getZhuanlan,
   };
 
   let res = await reqMap[curTab.value](pageIndex.value, pageSize);
 
   if (showImgGrid.value) {
     imgs.value = [...imgs.value, ...res.data];
-  } else if (curTab.value == "影集") {
+  } else if (curTab.value == YING_JI) {
     photographAlbums.value = [...photographAlbums.value, ...res.data.data];
-  } else if (curTab.value == "专栏") {
+  } else if (curTab.value == ZHUAN_LAN) {
     specialColumns.value = [...specialColumns.value, ...res.data];
   }
 
+  loadEnd.value =
+    curTab.value == YING_JI ? !res.data.data.length : !res.data.length;
   loading.value = false;
-
-  if (showImgGrid.value) {
-    loadEnd.value = !res.data.length;
-  } else if (curTab.value == "影集") {
-    loadEnd.value = !res.data.data.length;
-  } else if (curTab.value == "专栏") {
-    loadEnd.value = !res.data.length;
-  }
 });
 
 const showImgGrid = computed(() => {
-  return ["热门", "排名上升", "新作", "编辑推荐"].includes(curTab.value);
+  return [RE_MEN, PAI_MIN_SHANG_SHENG, XIN_ZUO, BIAN_JI_TUI_JIAN].includes(
+    curTab.value
+  );
 });
 </script>
 
